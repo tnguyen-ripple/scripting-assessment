@@ -1,3 +1,15 @@
+FROM node:latest as builder
+WORKDIR /usr/src/app
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+COPY . .
+RUN yarn build
+
 FROM node:latest
-# Feel free to entirely re-write this dockerfile to make it work.
-CMD ["/bin/sh","-c","while true; echo 'your probe should be running here'; do sleep 1; done" ]
+ENV NODE_ENV production
+USER node
+WORKDIR /usr/src/app
+COPY package.json yarn.lock ./
+RUN yarn install --production --frozen-lockfile
+COPY --from=builder /usr/src/app/build ./build
+CMD [ "node", "build/index.js" ]
