@@ -11,6 +11,7 @@ docker compose up
 docker run -d \
 --env NODE_ENV=dev \
 --env OTEL_EXPORTER_OTLP_METRICS_ENDPOINT='http://localhost:9090/api/v1/otlp/v1/metrics' \
+--network=host \
 your-probe:v1.0
 
 # Find the metrics in prometheus at
